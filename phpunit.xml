@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit testdox="true" colors="true">
+    <testsuites>
+        <testsuite name="Base CLI">
+            <file>tests/SupportTest.php</file>
+            <file>tests/BaseCliTest.php</file>
+        </testsuite>
+    </testsuites>
+</phpunit>
