@@ -14,6 +14,8 @@ class BaseCliOptions extends AbstractOptions
      */
     public const VALID_PROPERTIES = [
         'labels',
+        'helpGroup',
+        'helpTitle',
         'help',
         'required',
         'valued',
@@ -33,23 +35,40 @@ class BaseCliOptions extends AbstractOptions
         $this->setPrototypes($prototypes);
     }
 
-    public function help(array $list = [], $includeLabels = true, $initialTab = '    ')
+    private function parseHelpText($option, string $tab, string $text)
+    {
+        $text = str_replace('{{option}}', $option, $text);
+        $text = str_replace('{{labels}}', implode(', ', $this->getPrototype($option)['labels']), $text);
+        $text = str_replace('{{labels:pipe}}', implode(' | ', $this->getPrototype($option)['labels']), $text);
+
+        return $tab . $text;
+    }
+
+    public function help(array $list = [], string $group = '', string $initialTab = '    ')
     {
         $help = '';
 
         foreach ($this->prototypes as $option => $prototype) {
-            if (empty($list) or in_array($option, $list)) {
-                if (!empty($help)) {
-                    $help .= "\n";
-                }
-                $tab = $initialTab;
-                if ($includeLabels) {
-                    $help = Str::join("\n", $help, $tab . implode(', ', $prototype['labels']));
-                    $tab .= '    ';
-                }
-                foreach ($prototype['help'] as $line) {
-                    $help = Str::join("\n", $help, $tab . $line);
-                }
+            if (
+                (!empty($list) and !in_array($option, $list)) or
+                (!empty($group) and $group != $prototype['helpGroup'])
+            ) {
+                continue;
+            }
+
+            if (!empty($help)) {
+                $help .= "\n";
+            }
+            $tab = $initialTab;
+            if (!empty($prototype['helpTitle'])) {
+                $help = Str::join("\n", $help, $this->parseHelpText($option, $tab, $prototype['helpTitle']));
+                $tab .= '    ';
+            }
+            if ($prototype['required']) {
+                $help = Str::join("\n", $help, $tab . '(Required)');
+            }
+            foreach ($prototype['help'] as $line) {
+                $help = Str::join("\n", $help, $this->parseHelpText($option, $tab, $line));
             }
         }
 
@@ -78,6 +97,8 @@ class BaseCliOptions extends AbstractOptions
 
             $props = [
                 'labels' => [$option],
+                'helpGroup' => '',
+                'helpTitle' => '{{labels}}',
                 'help' => [],
                 'required' => false,
                 'valued' => false,
@@ -109,6 +130,12 @@ class BaseCliOptions extends AbstractOptions
                         throw BaseCliException::forInvalidPropertyValue($propValue, $propKey, $option);
                     }
                     $propValue = $value;
+                }
+
+                if (Str::icIn($propKey, 'helpGroup', 'helpTitle')) {
+                    if (!is_string($propValue)) {
+                        throw BaseCliException::forInvalidPropertyValue($propValue, $propKey, $option);
+                    }
                 }
 
                 $props[$propKey] = $propValue;

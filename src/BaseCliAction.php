@@ -2,7 +2,7 @@
 
 namespace Antares\Support\BaseCli;
 
-use Antares\Support\Options\OptionsException;
+use Exception;
 
 abstract class BaseCliAction
 {
@@ -31,6 +31,21 @@ abstract class BaseCliAction
     }
 
     /**
+     * Show message and exit with errorlevel
+     *
+     * @param string $msg
+     * @param int $errorLevel
+     * @return void
+     */
+    public function showAndExit($msg, $errorLevel = 0)
+    {
+        echo "\n";
+        echo "{$msg}\n";
+        echo "\n";
+        exit($errorLevel);
+    }
+
+    /**
      * Show message error and finish action with errorlevel 1
      *
      * @param string $msg
@@ -38,10 +53,7 @@ abstract class BaseCliAction
      */
     public function showError($msg)
     {
-        echo "\n";
-        echo "ERROR: {$msg}\n";
-        echo "\n";
-        exit(1);
+        $this->showAndExit($msg, 1);
     }
 
     /**
@@ -83,9 +95,7 @@ abstract class BaseCliAction
         $ex = null;
         try {
             $cli->run($cmd);
-        } catch (OptionsException $e) {
-            $ex = $e;
-        } catch (BaseCliException $e) {
+        } catch (Exception $e) {
             $ex = $e;
         }
 
