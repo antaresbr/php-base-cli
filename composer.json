@@ -15,7 +15,7 @@
     ],
     "license": "MIT",
     "require": {
-        "php": "^7",
+        "php": ">=7",
         "antaresbr/arrayhandler": "*",
         "antaresbr/options": "*",
         "antaresbr/stringhandler": "*"

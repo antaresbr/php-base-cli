@@ -1,6 +1,7 @@
-vendor
+composer.lock
+composer.phar
 phpunit.phar
 phpunit.phar.asc
-composer.phar
-composer.lock
+.phpunit.result.cache
+vendor
 
