@@ -13,7 +13,7 @@ class BaseCliException extends Exception
      */
     public static function forNoDataSupplied()
     {
-        return new static("No data suplied.\n");
+        return new static("No data supplied.\n");
     }
 
     /**
