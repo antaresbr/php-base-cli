@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-use Antares\Support\Options;
+use Antares\Foundation\Options\Options;
 use PHPUnit\Framework\TestCase;
 
 final class BaseCliTest extends TestCase

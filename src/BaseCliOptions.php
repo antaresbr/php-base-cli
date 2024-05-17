@@ -2,10 +2,10 @@
 
 namespace Antares\Support\BaseCli;
 
-use Antares\Support\Arr;
-use Antares\Support\Options\AbstractOptions;
-use Antares\Support\Options\OptionsException;
-use Antares\Support\Str;
+use Antares\Foundation\Arr;
+use Antares\Foundation\Options\AbstractOptions;
+use Antares\Foundation\Options\OptionsException;
+use Antares\Foundation\Str;
 
 class BaseCliOptions extends AbstractOptions
 {
